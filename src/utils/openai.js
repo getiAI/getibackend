@@ -40,7 +40,7 @@ const config = require("../config");
 
 const openai = new ChatOpenAI({
   modelName: 'gpt-4',
-apiKey: 'sk-xMDzZaUAxKA9tyEompUejDbwUaJVYVNUCZWqUGpaX5T3BlbkFJWnrLAWhFR8ZRJeo5L244boskepTN-8DjqvBuU2OVoA',
+apiKey: '',
 temperature: 0,
   maxTokens: 1000,
 });
