@@ -3,10 +3,11 @@ const { ChatOpenAI } = require("@langchain/openai");
 const { HumanMessage, SystemMessage } = require("@langchain/core/messages");
 const fs = require('fs');
 const config = require("../config");
+require('dotenv').config();
 
 const openai = new ChatOpenAI({
   modelName: 'gpt-4',
-  apiKey: '',
+  apiKey: config.openaiApiKey,
   temperature: 0,
   maxTokens: 1000,
 });
