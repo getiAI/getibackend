@@ -1,9 +1,18 @@
+
+
 // const langchain = require('../utils/langchain');
 // const openai = require('../utils/openai');
+// const fs = require('fs');
 // const ipfs = require('../utils/ipfs');
 
-// exports.auditContracts = async (contracts, markdownContent) => {
+// exports.auditContracts = async (contractFiles, markdownContent) => {
 //   try {
+//     // Read the contents of the contract files
+//     const contracts = contractFiles.map(file => {
+//       const content = fs.readFileSync(file, 'utf8');
+//       return { filename: file, content };
+//     });
+
 //     // Prepare training data
 //     const trainingData = await langchain.prepareTrainingData(contracts, markdownContent);
 
@@ -21,22 +30,19 @@
 // };
 
 
-
-const langchain = require('../utils/langchain');
 const openai = require('../utils/openai');
-const fs = require('fs');
 const ipfs = require('../utils/ipfs');
 
 exports.auditContracts = async (contractFiles, markdownContent) => {
   try {
-    // Read the contents of the contract files
+    // Read the contents of the contract files from the buffer
     const contracts = contractFiles.map(file => {
-      const content = fs.readFileSync(file, 'utf8');
-      return { filename: file, content };
+      const content = file.buffer.toString('utf8');
+      return { filename: file.originalname, content };
     });
 
     // Prepare training data
-    const trainingData = await langchain.prepareTrainingData(contracts, markdownContent);
+    const trainingData = { contracts, markdownContent };
 
     // Analyze contracts using OpenAI GPT-4
     const analysisResults = await openai.analyzeContracts(trainingData);

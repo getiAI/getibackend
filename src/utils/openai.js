@@ -6,8 +6,8 @@ const config = require("../config");
 
 const openai = new ChatOpenAI({
   modelName: 'gpt-4',
- apiKey: '',
-temperature: 0,
+  apiKey: '',
+  temperature: 0,
   maxTokens: 1000,
 });
 

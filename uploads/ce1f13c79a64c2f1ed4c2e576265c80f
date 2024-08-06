@@ -1,0 +1,46 @@
+#![no_main]
+#![no_std]
+
+extern crate alloc;
+#[global_allocator]
+static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+
+use alloc::vec::Vec;
+use stylus_sdk::{console, entrypoint, sol_storage, ArbResult};
+
+// Define the storage structure using sol_storage macro
+sol_storage! {
+    #[entrypoint]
+    pub struct SimpleStorage {
+        uint256 value;  // equivalent to StorageUint<u64>
+    }
+}
+
+impl SimpleStorage {
+    /// Sets the value in storage.
+    pub fn set_value(&mut self, new_value: u64) {
+        self.value.set(new_value.into());
+    }
+
+    /// Gets the value from storage.
+    pub fn get_value(&self) -> u64 {
+        self.value.get().as_u64()
+    }
+}
+
+#[entrypoint]
+fn user_main(input: Vec<u8>) -> ArbResult {
+    let mut storage = storage::get::<SimpleStorage>();
+
+    if input.is_empty() {
+        // Get value operation
+        let value = storage.get_value();
+        console!("Current value: {}", value);
+        Ok(value.to_le_bytes().to_vec())
+    } else {
+        // Set value operation
+        let new_value = u64::from_le_bytes(input.try_into().expect("Invalid input length"));
+        storage.set_value(new_value);
+        Ok(Vec::new())
+    }
+}
